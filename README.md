@@ -16,6 +16,8 @@ lexeme/
 ├── extract_ops.py           # Extract whitelisted ops from curated dataset
 ├── curated_100.jsonl        # 100 valid Triton kernels (must be accepted)
 ├── adversarial_100.jsonl    # 100 invalid Triton snippets (must be rejected)
+├── conftest.py              # Warns if branch is behind origin/main
+├── requirements.txt         # Python dependencies
 ├── AGENTS.md                # Agent instructions
 └── README.md
 ```

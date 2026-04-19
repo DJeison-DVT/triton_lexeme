@@ -46,6 +46,8 @@ lexeme/
 ├── extract_ops.py           # Extract whitelisted ops from curated dataset
 ├── curated_100.jsonl         # 100 valid Triton kernels (must be accepted)
 ├── adversarial_100.jsonl     # 100 invalid Triton snippets (must be rejected)
+├── conftest.py              # Warns if branch is behind origin/main
+├── requirements.txt         # Python dependencies
 ├── AGENTS.md
 └── README.md
 ```
@@ -73,10 +75,22 @@ pytest test_triton_grammar.py -k "triton_poi_fused_sum_0" -v
 
 This project uses **red-green TDD**:
 
-1. Run `pytest` — observe which curated kernels are RED (rejected by grammar)
-2. Edit `triton.ebnf` to expand the grammar
-3. Re-run `pytest` — confirm new GREEN tests without breaking adversarial rejection
-4. Repeat until all 202 tests pass
+1. `git pull origin main` — sync to the latest grammar
+2. Run `pytest` — observe which curated kernels are RED (rejected by grammar)
+3. Edit `triton.ebnf` to expand the grammar
+4. Re-run `pytest` — confirm new GREEN tests without breaking adversarial rejection
+5. Commit and push
+
+### Staying in sync
+
+`conftest.py` automatically fetches `origin/main` before each test run. If your branch is behind, you'll see:
+
+```
+*** Your branch is N commit(s) behind origin/main. ***
+*** Run 'git pull origin main' before testing the grammar. ***
+```
+
+Always pull before editing `triton.ebnf` to avoid merge conflicts on the single grammar file.
 
 ### Key rule
 
