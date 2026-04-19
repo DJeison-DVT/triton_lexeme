@@ -1,0 +1,28 @@
+root ::= "@triton.jit" "\n" func_def
+
+func_def ::= "def " identifier "(" identifier ")" ":" "\n" identifier
+
+identifier ::= [a-zA-Z_] [a-zA-Z0-9_]*
+
+# ── Expand here to include more operations as needed ───────────────────────────────
+
+
+
+
+
+# ── Whitelisted operations (29 ops from curated dataset) ──────────────
+
+tl_op ::= "tl.arange" | "tl.broadcast_to" | "tl.constexpr" | "tl.debug_barrier"
+        | "tl.device_assert" | "tl.float32" | "tl.float64" | "tl.full"
+        | "tl.int1" | "tl.int8" | "tl.int32" | "tl.int64"
+        | "tl.load" | "tl.num_programs" | "tl.program_id" | "tl.sigmoid"
+        | "tl.store" | "tl.sum" | "tl.where"
+
+libdevice_op ::= "libdevice.isnan" | "libdevice.log1p" | "libdevice.rsqrt"
+               | "libdevice.signbit" | "libdevice.sqrt"
+
+tl_math_op ::= "tl_math.abs" | "tl_math.exp" | "tl_math.log"
+
+triton_helpers_op ::= "triton_helpers.maximum" | "triton_helpers.minimum"
+
+builtin_call ::= tl_op | libdevice_op | tl_math_op | triton_helpers_op
