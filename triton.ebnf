@@ -24,11 +24,11 @@ stmt_content ::= identifier ": tl.constexpr = " expr
 
 expr ::= ternary
 ternary ::= comparison (whitespace? "if " comparison whitespace? "else " ternary)?
-comparison ::= bitand ((" <=" | " >=" | " ==" | " !=" | " is" | " <" | " >") whitespace bitand)?
-bitand ::= add_expr (" &" whitespace add_expr)*
-add_expr ::= mul_expr ((" +" | " -") whitespace mul_expr)*
-mul_expr ::= unary ((" *" | " /" | " //" | " %") whitespace unary)*
-unary ::= "-"? primary
+comparison ::= bitand (whitespace? ("<=" | ">=" | "==" | "!=" | "<" | ">") whitespace? bitand | " is " bitand)?
+bitand ::= add_expr (whitespace? "&" whitespace? add_expr)*
+add_expr ::= mul_expr (whitespace? ("+" | "-") whitespace? mul_expr)*
+mul_expr ::= unary (whitespace? ("//" | "*" | "/" | "%") whitespace? unary)*
+unary ::= ("-" " "?)? primary
 primary ::= (callable suffix*) | literal
 
 callable ::= identifier | "(" expr nl_indent? ")"
