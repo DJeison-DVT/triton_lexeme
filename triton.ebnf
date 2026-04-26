@@ -1,22 +1,23 @@
-root ::= "@triton.jit" "\n" func_def
+root ::= "@triton.jit" comment? "\n" func_def
 
-func_def ::= "def " identifier "(" nl_indent? param_list "):" "\n" body
+func_def ::= "def " identifier "(" nl_indent? param_list "):" comment? "\n" body
 
 indent ::= "    "
+comment ::= " #" [^\n]*
 nl_indent ::= "\n" indent+
 whitespace ::= " "? nl_indent | " "
 
 param_list ::= param (nl_indent? "," " "? nl_indent? param)*
 param ::= identifier (":" whitespace "tl." nl_indent? "constexpr")?
 
-body ::= body_line ("\n" body_line)*
+body ::= body_line (comment? "\n" body_line)*
 
-body_line ::= indent "for " identifier " in range(" range_args "):" "\n" for_body
+body_line ::= indent "for " identifier " in range(" range_args "):" comment? "\n" for_body
             | indent stmt_content
 
 range_args ::= expr (", " expr (", " expr)?)?
 
-for_body ::= for_line ("\n" for_line)*
+for_body ::= for_line (comment? "\n" for_line)*
 for_line ::= indent indent stmt_content
 
 stmt_content ::= identifier ": tl.constexpr = " expr
