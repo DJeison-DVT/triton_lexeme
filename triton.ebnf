@@ -12,10 +12,8 @@ param ::= identifier (":" whitespace "tl." nl_indent? "constexpr")?
 
 body ::= body_line (comment? "\n" body_line)*
 
-body_line ::= indent "for " identifier " in range(" range_args "):" comment? "\n" for_body
+body_line ::= indent "for " identifier " in range(" expr ", " expr ", " expr "):" comment? "\n" for_body
             | indent stmt_content
-
-range_args ::= expr (", " expr (", " expr)?)?
 
 for_body ::= for_line (comment? "\n" for_line)*
 for_line ::= indent indent stmt_content
