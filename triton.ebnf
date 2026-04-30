@@ -1,6 +1,15 @@
-root ::= "@triton.jit" comment? "\n" func_def
+root ::= imports "@triton.jit" comment? "\n" func_def
 
-func_def ::= "def " identifier "(" nl_indent? param_list "):" comment? "\n" body
+imports ::= ("\n" | import_line "\n")*
+import_line ::= "import " dotted_name (" as " identifier)?
+               | "from " dotted_name " import " import_names
+               | "#" [^\n]*
+
+dotted_name ::= identifier ("." identifier)*
+import_names ::= import_name (", " import_name)*
+import_name ::= identifier (" as " identifier)?
+
+func_def ::= "def " identifier "(" nl_indent? param_list ("\n" indent*)? "):" comment? "\n" body
 
 indent ::= "    "
 comment ::= " #" [^\n]*
@@ -8,7 +17,7 @@ nl_indent ::= "\n" indent+
 whitespace ::= " "? nl_indent | " "
 
 param_list ::= param (nl_indent? "," " "? nl_indent? param)*
-param ::= identifier (":" whitespace "tl." nl_indent? "constexpr")?
+param ::= identifier (":" whitespace "tl" nl_indent? "." nl_indent? "constexpr")?
 
 body ::= body_line (comment? "\n" body_line)*
 
@@ -26,25 +35,26 @@ stmt_content ::= identifier ": tl.constexpr = " expr
 
 expr ::= ternary
 ternary ::= comparison (whitespace? "if " comparison whitespace? "else " ternary)?
-comparison ::= bitand (whitespace? ("<=" | ">=" | "==" | "!=" | "<" | ">") whitespace? bitand | " is " bitand)?
+comparison ::= bitxor (whitespace? ("<=" | ">=" | "==" | "!=" | "<" | ">") whitespace? bitxor | " is " bitxor)?
+bitxor ::= bitand (whitespace? "^" whitespace? bitand)*
 bitand ::= add_expr (whitespace? "&" whitespace? add_expr)*
 add_expr ::= mul_expr (whitespace? ("+" | "-") whitespace? mul_expr)*
 mul_expr ::= unary (whitespace? ("//" | "*" | "/" | "%") whitespace? unary)*
 unary ::= ("-" " "?)? primary
 primary ::= (callable suffix*) | literal
 
-callable ::= identifier | "(" expr nl_indent? ")"
+callable ::= identifier | "(" nl_indent? expr nl_indent? ")"
 literal ::= float_num | number | string | "True" | "False" | "None" | list_lit
 
-suffix ::= "(" call_args nl_indent? ")" | "[" index "]" | "." identifier
+suffix ::= "(" call_args nl_indent? ")" | "[" index "]" | nl_indent? "." identifier
 
 call_args ::= (arg ("," whitespace arg)*)?
-arg ::= identifier "=" nl_indent? expr | expr
+arg ::= identifier nl_indent? "=" nl_indent? expr | expr
 
 index ::= index_elem ("," whitespace index_elem)*
 index_elem ::= ":" | "None" | expr
 
-list_lit ::= "[" expr ("," whitespace expr)* "]"
+list_lit ::= "[" expr ("," whitespace expr)* nl_indent? "]"
 
 identifier ::= [a-zA-Z_] [a-zA-Z0-9_]*
 number ::= [0-9]+
