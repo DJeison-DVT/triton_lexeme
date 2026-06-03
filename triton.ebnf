@@ -1,34 +1,29 @@
-root ::= imports "@triton.jit" space_comment? "\n" func_def
+root ::= imports "@triton.jit" "\n" func_def
 
 imports ::= ("\n" | import_line "\n")*
 import_line ::= "import " dotted_name (" as " identifier)?
                | "from " dotted_name " import " import_names
-               | comment
 
 dotted_name ::= identifier ("." identifier)*
 import_names ::= import_name (", " import_name)*
 import_name ::= identifier (" as " identifier)?
 
-func_def ::= "def " identifier "(" nl_indent? param_list ("\n" indent*)? "):" space_comment? "\n" body
+func_def ::= "def " identifier "(" nl_indent? param_list ("\n" indent*)? "):" "\n" body
 
 indent ::= "    "
-comment ::= "#" [^\n]*
-space_comment ::= " " comment
 nl_indent ::= "\n" indent+
 whitespace ::= " "? nl_indent | " "
 
 param_list ::= param (nl_indent? "," " "? nl_indent? param)*
 param ::= identifier (":" whitespace "tl" nl_indent? "." nl_indent? "constexpr")?
 
-body ::= body_line (space_comment? "\n" body_line)*
+body ::= body_line ("\n" body_line)*
 
-body_line ::= indent "for " identifier " in range(" expr ", " expr ", " expr "):" space_comment? "\n" for_body
+body_line ::= indent "for " identifier " in range(" expr ", " expr ", " expr "):" "\n" for_body
             | indent stmt_content
-            | indent comment
 
-for_body ::= for_line (space_comment? "\n" for_line)*
+for_body ::= for_line ("\n" for_line)*
 for_line ::= indent indent stmt_content
-           | indent indent comment
 
 stmt_content ::= identifier ": tl.constexpr = " expr
                | identifier " = " expr
