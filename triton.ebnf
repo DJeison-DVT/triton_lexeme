@@ -1,12 +1,4 @@
-root ::= imports "@triton.jit" "\n" func_def
-
-imports ::= ("\n" | import_line "\n")*
-import_line ::= "import " dotted_name (" as " identifier)?
-               | "from " dotted_name " import " import_names
-
-dotted_name ::= identifier ("." identifier)*
-import_names ::= import_name (", " import_name)*
-import_name ::= identifier (" as " identifier)?
+root ::= "import triton\nimport triton.language as tl\n\n@triton.jit\n" func_def
 
 func_def ::= "def " identifier "(" nl_indent? param_list ("\n" indent*)? "):" "\n" body
 
